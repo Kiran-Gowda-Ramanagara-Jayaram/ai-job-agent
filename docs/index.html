@@ -49,8 +49,8 @@
     }
   </style>
 
-  <!-- Mermaid -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.3/mermaid.min.js"></script>
+  <!-- Mermaid (use <div class="mermaid"> to avoid <pre> parsing quirks) -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
   <script>mermaid.initialize({startOnLoad:true, theme:"dark"});</script>
 
   <!-- MathJax for LaTeX (display + inline) -->
@@ -76,8 +76,8 @@
       Built by <strong>Kiran Gowda Ramanagara Jayaram</strong>.
     </p>
     <div class="cta">
-      <a class="btn primary" href="README.md">Read the README</a>
-      <a class="btn secondary" href="app/app.py">View the Streamlit app code</a>
+      <a class="btn primary" href="../README.md">Read the README</a>
+      <a class="btn secondary" href="../app/app.py">View the Streamlit app code</a>
       <a class="btn" href="#run">Run locally</a>
       <a class="btn" href="#results">Results</a>
     </div>
@@ -104,16 +104,17 @@
     <h2>Architecture</h2>
     <div class="card">
       <div class="mermaid">
+%%{init: {'theme': 'dark'}}%%
 flowchart LR
-    A[Ingest Scripts] --> B[(SQLite Database)]
-    B --> C[RoleFit Model]
-    C --> D[Streamlit App]
-    D --> E[LLM Artifacts]
-    D --> F[RAG Store]
-    D --> G[Hunter API]
-    D --> H[(CRM System)]
-    H --> I[Thompson Sampling]
-    I --> D
+  A[Ingest scripts: Greenhouse/Lever/Ashby] --> B[(SQLite jobs.db)]
+  B --> C[RoleFit v2 (cosine + logistic)]
+  C --> D[Streamlit App: Queue & Dashboard]
+  D --> E[LLM Artifact Gen]
+  D --> F[RAG SimpleStore]
+  D --> G[Hunter.io: Domain & Name Finder]
+  D --> H[(CRM: Contacts & Outreach)]
+  H --> I[Bandit (Thompson Sampling)]
+  I --> D
       </div>
     </div>
   </div>
@@ -188,12 +189,12 @@ streamlit run app/app.py
   <div class="container section">
     <h2>Links</h2>
     <ul>
-      <li><a href="README.md">Repository README</a></li>
-      <li><a href="app/app.py">Streamlit app</a></li>
-      <li><a href="agents/outreach_agent.py">Outreach Agent (bandit)</a></li>
-      <li><a href="agents/composer.py">Artifact Composer</a></li>
-      <li><a href="scripts/train_fit_model.py">Training script</a></li>
-      <li><a href="LICENSE">MIT License</a></li>
+      <li><a href="../README.md">Repository README</a></li>
+      <li><a href="../app/app.py">Streamlit app</a></li>
+      <li><a href="../agents/outreach_agent.py">Outreach Agent (bandit)</a></li>
+      <li><a href="../agents/composer.py">Artifact Composer</a></li>
+      <li><a href="../scripts/train_fit_model.py">Training script</a></li>
+      <li><a href="../LICENSE">MIT License</a></li>
     </ul>
   </div>
 
