@@ -4,13 +4,14 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>AI Job Agent — INFO 7375</title>
-  <meta name="description" content="Semi-autonomous job discovery, tailoring, and recruiter-outreach system using LLMs, RAG, RoleFit, and a Thompson-sampling learner." />
+  <meta name="description" content="Semi-autonomous job discovery, artifact generation, recruiter outreach, and online learning. Graduate-level project with RAG, RoleFit model, and Thompson sampling." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
   <style>
     :root{
-      --bg:#0b0f14; --panel:#121822; --muted:#96a2b4; --text:#e8eef7; --accent:#66e3ff; --accent2:#7cffb2;
-      --code:#0f1420; --border:#243245;
+      --bg:#0b0f14; --panel:#101723; --muted:#98a7ba; --text:#e8eef7; --accent:#66e3ff; --accent2:#7cffb2;
+      --code:#0f1420; --border:#233246;
     }
     *{box-sizing:border-box}
     html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial,sans-serif}
@@ -19,11 +20,11 @@
     .container{max-width:1100px;margin:0 auto;padding:28px}
     .hero{padding:72px 0;text-align:center}
     .title{font-size:40px;font-weight:800;letter-spacing:.2px;margin:0 0 10px}
-    .subtitle{color:var(--muted);font-size:18px;margin:0 auto 24px;max-width:880px}
+    .subtitle{color:var(--muted);font-size:18px;margin:0 auto 24px;max-width:900px}
     .cta{display:inline-flex;gap:14px;flex-wrap:wrap;justify-content:center}
     .btn{padding:12px 18px;border-radius:12px;border:1px solid var(--border);background:linear-gradient(180deg,#182232 0%, #121a28 100%);color:var(--text);font-weight:600}
     .btn.primary{background:linear-gradient(180deg,#00c6ff 0%, #0072ff 100%);border:0;color:#061422}
-    .btn.secondary{background:linear-gradient(180deg,#2b3546 0%, #212a3a 100%)}
+    .btn.secondary{background:linear-gradient(180deg,#293447 0%, #1e293a 100%)}
     .grid{display:grid;gap:18px}
     .grid.cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}
     .card{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:18px}
@@ -32,26 +33,24 @@
     pre,code{background:var(--code);border:1px solid var(--border);border-radius:12px}
     pre{padding:16px;overflow:auto}
     .section{padding:30px 0}
-    .chip{display:inline-block;padding:4px 10px;border-radius:999px;background:#0e1a27;border:1px solid var(--border);color:var(--muted);font-size:12px}
+    .chip{display:inline-block;padding:4px 10px;border-radius:999px;background:#0d1826;border:1px solid var(--border);color:var(--muted);font-size:12px}
     footer{padding:40px 0;color:var(--muted);text-align:center;border-top:1px solid var(--border);margin-top:50px}
-    .figure{background:var(--panel);border:1px dashed var(--border);border-radius:14px;padding:10px}
-    .math p{margin:8px 0}
+    .figure{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px}
+    .eq{margin:8px 0 0}
+    .eq .MathJax{font-size:1.04rem}
+    .kbd{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace}
     @media (max-width:900px){ .grid.cols-3{grid-template-columns:1fr} .title{font-size:30px} }
   </style>
 
-  <!-- Mermaid (architecture diagram) -->
+  <!-- Mermaid (render simple graph) -->
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-  <script>mermaid.initialize({startOnLoad:true, theme:"dark"});</script>
-
-  <!-- MathJax (formulas) -->
   <script>
-    window.MathJax = {
-      tex: {
-        inlineMath: [['\\(','\\)']],
-        displayMath: [['\\[','\\]']]
-      },
-      options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
-    };
+    mermaid.initialize({ startOnLoad: true, theme: "dark" });
+  </script>
+
+  <!-- MathJax (ONLY \(..\) and \[..\] delimiters to avoid $ conflicts) -->
+  <script>
+    window.MathJax = { tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] }, svg: { fontCache: 'global' } };
   </script>
   <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
@@ -65,8 +64,8 @@
       Built by <strong>Kiran Gowda Ramanagara Jayaram</strong>.
     </p>
     <div class="cta">
-      <a class="btn primary" href="https://github.com/Kiran-Gowda-Ramanagara-Jayaram/ai-job-agent/blob/main/README.md">Read the README</a>
-      <a class="btn secondary" href="https://github.com/Kiran-Gowda-Ramanagara-Jayaram/ai-job-agent/blob/main/app/app.py">View the Streamlit app code</a>
+      <a class="btn primary" href="https://github.com/Kiran-Gowda-Ramanagara-Jayaram/ai-job-agent#readme">Read the README</a>
+      <a class="btn secondary" href="https://github.com/Kiran-Gowda-Ramanagara-Jayaram/ai-job-agent/blob/main/app/app.py">Streamlit app code</a>
       <a class="btn" href="#run">Run locally</a>
       <a class="btn" href="#results">Results</a>
     </div>
@@ -80,7 +79,7 @@
       </div>
       <div class="card">
         <h3>RoleFit model</h3>
-        <p class="muted">Cosine features + logistic regression estimate \(p(y=1\mid x)\) to rank jobs by fit.</p>
+        <p class="muted">Cosine features + logistic regression estimate \(p(y{=}1\mid x)\) to rank jobs by fit.</p>
       </div>
       <div class="card">
         <h3>Bandit-driven outreach</h3>
@@ -93,15 +92,15 @@
     <h2>Architecture</h2>
     <div class="figure">
       <div class="mermaid">
-flowchart LR
-  A[Ingest scripts] --> B[(jobs_db)]
-  B --> C[RoleFit v2]
+graph LR
+  A[Ingest scripts] --> B[(SQLite jobs db)]
+  B --> C[RoleFit scorer]
   C --> D[Streamlit app]
-  D --> E[Artifact gen]
+  D --> E[LLM artifacts]
   D --> F[RAG store]
   D --> G[Hunter io]
   D --> H[(CRM)]
-  H --> I[Bandit]
+  H --> I[Bandit learner]
   I --> D
       </div>
     </div>
@@ -110,42 +109,52 @@ flowchart LR
   <div class="container section">
     <h2>Key math</h2>
     <div class="grid cols-3">
-      <div class="card math">
+      <div class="card">
         <h3>Logistic regression</h3>
-        <p>\(\Pr(y=1\mid x)=\sigma(w^\top x+b),\quad \sigma(z)=\frac{1}{1+e^{-z}}\)</p>
-        <p>Loss:
-        \[
-          \min_{w,b}\ \sum_{i=1}^{n}\Big[-y_i\log p_i-(1-y_i)\log(1-p_i)\Big]+\lambda\lVert w\rVert_2^2,
-          \quad p_i=\sigma(w^\top x_i+b).
-        \]
-        </p>
+        <div class="muted">
+          \[
+            \Pr(y=1\mid x)=\sigma(w^\top x + b),\qquad
+            \sigma(z)=\frac{1}{1+e^{-z}}
+          \]
+          <div class="eq">
+            \[
+              \min_{w,b}\;\sum_{i=1}^{n}\Big[-y_i\ln p_i-(1-y_i)\ln(1-p_i)\Big] + \lambda\lVert w\rVert_2^2,\quad
+              p_i=\sigma(w^\top x_i+b).
+            \]
+          </div>
+        </div>
       </div>
-      <div class="card math">
+
+      <div class="card">
         <h3>RAG retrieval</h3>
-        <p>
-        \[
-          \operatorname*{arg\,topk}_{m}\ \cos\big(\phi(q),\,\phi(d_m)\big)
-        \]
-        over JD/company snippets.
-        </p>
+        <div class="muted">
+          \[
+            \text{top-}k(q)=\underset{m\in\{1,\dots,M\}}{\arg\max}\;
+            \cos\!\big(\phi(q),\,\phi(d_m)\big)
+          \]
+          where \(\phi(\cdot)\) is the embedding function and \(\cos\) is cosine similarity.
+        </div>
       </div>
-      <div class="card math">
+
+      <div class="card">
         <h3>Bandit posterior</h3>
-        <p>
-        \[
-          \alpha \leftarrow \alpha + r,\quad
-          \beta \leftarrow \beta + 1 - r;\qquad
-          \tilde{\theta} \sim \mathrm{Beta}(\alpha,\beta)
-        \]
-        pick \(\arg\max_k \tilde{\theta}_k\).
-        </p>
+        <div class="muted">
+          Beta–Bernoulli Thompson sampling per bucket/template:
+          <div class="eq">
+            \[
+              (\alpha,\beta)\leftarrow(\alpha + r,\;\beta + 1 - r),\qquad
+              \tilde{\theta}\sim\mathrm{Beta}(\alpha,\beta),\quad
+              k^\*=\arg\max_k \tilde{\theta}_k.
+            \]
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
   <div id="run" class="container section">
     <h2>Run locally</h2>
-<pre><code># 1) Setup
+<pre><code class="kbd"># 1) Setup
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
@@ -159,7 +168,8 @@ python -m scripts.ingest_presets --limit 100
 python -m scripts.cleanup_jobs
 
 # 4) (Optional) Train RoleFit
-python -m scripts.seed_synthetic && python -m scripts.train_fit_model
+python -m scripts.seed_synthetic
+python -m scripts.train_fit_model
 
 # 5) Launch
 streamlit run app/app.py
@@ -171,11 +181,11 @@ streamlit run app/app.py
     <div class="grid cols-3">
       <div class="card">
         <h3>Fit model</h3>
-        <p class="muted">5-fold ROC-AUC/PR-AUC reported in the technical report. Calibrated probabilities used for ranking.</p>
+        <p class="muted">5-fold ROC-AUC/PR-AUC reported in the technical report; calibrated probabilities used for ranking.</p>
       </div>
       <div class="card">
         <h3>Learning loop</h3>
-        <p class="muted">Template selection frequencies and moving-average rewards show convergence by bucket.</p>
+        <p class="muted">Template selection frequencies and moving-average rewards indicate convergence by bucket.</p>
       </div>
       <div class="card">
         <h3>UX</h3>
@@ -187,7 +197,7 @@ streamlit run app/app.py
   <div class="container section">
     <h2>Links</h2>
     <ul>
-      <li><a href="https://github.com/Kiran-Gowda-Ramanagara-Jayaram/ai-job-agent/blob/main/README.md">Repository README</a></li>
+      <li><a href="https://github.com/Kiran-Gowda-Ramanagara-Jayaram/ai-job-agent#readme">Repository README</a></li>
       <li><a href="https://github.com/Kiran-Gowda-Ramanagara-Jayaram/ai-job-agent/blob/main/app/app.py">Streamlit app</a></li>
       <li><a href="https://github.com/Kiran-Gowda-Ramanagara-Jayaram/ai-job-agent/blob/main/agents/outreach_agent.py">Outreach Agent (bandit)</a></li>
       <li><a href="https://github.com/Kiran-Gowda-Ramanagara-Jayaram/ai-job-agent/blob/main/agents/composer.py">Artifact Composer</a></li>
