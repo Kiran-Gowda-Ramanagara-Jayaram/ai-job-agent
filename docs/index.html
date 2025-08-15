@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Job Agent — INFO 7375</title>
+  <meta name="description" content="Semi-autonomous job discovery, tailoring, and recruiter-outreach system using LLMs, RAG, RoleFit, and a Thompson-sampling learner." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0b0f14; --panel:#121822; --muted:#96a2b4; --text:#e8eef7; --accent:#66e3ff; --accent2:#7cffb2;
+      --code:#0f1420; --border:#243245;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial,sans-serif}
+    a{color:var(--accent);text-decoration:none}
+    a:hover{opacity:.9}
+    .container{max-width:1100px;margin:0 auto;padding:28px}
+    .hero{padding:72px 0;text-align:center}
+    .title{font-size:40px;font-weight:800;letter-spacing:.2px;margin:0 0 10px}
+    .subtitle{color:var(--muted);font-size:18px;margin:0 auto 24px;max-width:880px}
+    .cta{display:inline-flex;gap:14px;flex-wrap:wrap;justify-content:center}
+    .btn{padding:12px 18px;border-radius:12px;border:1px solid var(--border);background:linear-gradient(180deg,#182232 0%, #121a28 100%);color:var(--text);font-weight:600}
+    .btn.primary{background:linear-gradient(180deg,#00c6ff 0%, #0072ff 100%);border:0;color:#061422}
+    .btn.secondary{background:linear-gradient(180deg,#2b3546 0%, #212a3a 100%)}
+    .grid{display:grid;gap:18px}
+    .grid.cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .card{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:18px}
+    .card h3{margin:0 0 8px;font-size:18px}
+    .muted{color:var(--muted)}
+    pre,code{background:var(--code);border:1px solid var(--border);border-radius:12px}
+    pre{padding:16px;overflow:auto}
+    .section{padding:30px 0}
+    .chip{display:inline-block;padding:4px 10px;border-radius:999px;background:#0e1a27;border:1px solid var(--border);color:var(--muted);font-size:12px}
+    footer{padding:40px 0;color:var(--muted);text-align:center;border-top:1px solid var(--border);margin-top:50px}
+    .badge{font-size:12px;color:#061422;background:var(--accent2);padding:3px 10px;border-radius:999px;font-weight:700}
+    .figure{background:var(--panel);border:1px dashed var(--border);border-radius:14px;padding:10px}
+    @media (max-width:900px){ .grid.cols-3{grid-template-columns:1fr} .title{font-size:30px} }
+  </style>
+  <!-- Mermaid for architecture diagram -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>mermaid.initialize({startOnLoad:true, theme:"dark"});</script>
+  <!-- MathJax for formulas shown on the page -->
+  <script>
+    window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] } };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+  <div class="container hero">
+    <div class="chip">INFO 7375 • Generative AI • Northeastern University</div>
+    <h1 class="title">AI Job Agent</h1>
+    <p class="subtitle">
+      Semi-autonomous job discovery, artifact generation, recruiter outreach, and online learning.
+      Built by <strong>Kiran Gowda Ramanagara Jayaram</strong>.
+    </p>
+    <div class="cta">
+      <a class="btn primary" href="../README.md">Read the README</a>
+      <a class="btn secondary" href="../app/app.py">View the Streamlit app code</a>
+      <a class="btn" href="#run">Run locally</a>
+      <a class="btn" href="#results">Results</a>
+    </div>
+  </div>
+
+  <div class="container section">
+    <div class="grid cols-3">
+      <div class="card">
+        <h3>RAG-grounded artifacts</h3>
+        <p class="muted">Resume bullets, cover letter, prep pack, and 20 STAR answers conditioned on JD/company snippets.</p>
+      </div>
+      <div class="card">
+        <h3>RoleFit model</h3>
+        <p class="muted">Cosine features + logistic regression estimate $p(y{=}1\\mid x)$ to rank jobs by fit.</p>
+      </div>
+      <div class="card">
+        <h3>Bandit-driven outreach</h3>
+        <p class="muted">Thompson sampling over templates per bucket (role|company) learns what works.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="container section">
+    <h2>Architecture</h2>
+    <div class="figure">
+<pre class="mermaid">
+flowchart LR
+  A[Ingest scripts: Greenhouse/Lever/Ashby] --> B[(SQLite jobs.db)]
+  B --> C[RoleFit v2 (cosine + logistic)]
+  C --> D[Streamlit App: Queue & Dashboard]
+  D --> E[LLM Artifact Gen]
+  D --> F[RAG SimpleStore]
+  D --> G[Hunter.io: Domain & Name Finder]
+  D --> H[(CRM: Contacts & Outreach)]
+  H --> I[Bandit (Thompson Sampling)]
+  I --> D
+</pre>
+    </div>
+  </div>
+
+  <div class="container section">
+    <h2>Key math</h2>
+    <div class="grid cols-3">
+      <div class="card">
+        <h3>Logistic regression</h3>
+        <p class="muted">
+          $\\Pr(y{=}1\\mid x) = \\sigma(w^\\top x + b),\\quad
+          \\min\\limits_{w,b} \\sum_i -y_i\\log p_i - (1-y_i)\\log(1-p_i) + \\lambda \\lVert w \\rVert_2^2.$
+        </p>
+      </div>
+      <div class="card">
+        <h3>RAG retrieval</h3>
+        <p class="muted">
+          $\\operatorname*{arg\\,topk}_m \\cos(\\phi(q), \\phi(d_m))$ over JD/company snippets.
+        </p>
+      </div>
+      <div class="card">
+        <h3>Bandit posterior</h3>
+        <p class="muted">
+          $\\alpha \\leftarrow \\alpha + r,\\ \\beta \\leftarrow \\beta + 1 - r;\\
+          \\tilde{\\theta} \\sim \\mathrm{Beta}(\\alpha,\\beta)$, pick $\\arg\\max \\tilde{\\theta}$.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div id="run" class="container section">
+    <h2>Run locally</h2>
+<pre><code># 1) Setup
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+
+# 2) Configure
+# .env with OPENAI_API_KEY and HUNTER_API_KEY
+# data/profile.yaml with roles, locations, keywords
+
+# 3) Ingest jobs and clean up
+python -m scripts.ingest_presets --limit 100
+python -m scripts.cleanup_jobs
+
+# 4) (Optional) Train RoleFit
+python -m scripts.seed_synthetic && python -m scripts.train_fit_model
+
+# 5) Launch
+streamlit run app/app.py
+</code></pre>
+  </div>
+
+  <div id="results" class="container section">
+    <h2>Results snapshot</h2>
+    <div class="grid cols-3">
+      <div class="card">
+        <h3>Fit model</h3>
+        <p class="muted">5-fold ROC-AUC/PR-AUC reported in the technical report. Calibrated probabilities used for ranking.</p>
+      </div>
+      <div class="card">
+        <h3>Learning loop</h3>
+        <p class="muted">Template selection frequencies and moving-average rewards show convergence by bucket.</p>
+      </div>
+      <div class="card">
+        <h3>UX</h3>
+        <p class="muted">Queue drives artifact generation and outreach; Dashboard aggregates outcomes and exports CSVs.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="container section">
+    <h2>Links</h2>
+    <ul>
+      <li><a href="../README.md">Repository README</a></li>
+      <li><a href="../app/app.py">Streamlit app</a></li>
+      <li><a href="../agents/outreach_agent.py">Outreach Agent (bandit)</a></li>
+      <li><a href="../agents/composer.py">Artifact Composer</a></li>
+      <li><a href="../scripts/train_fit_model.py">Training script</a></li>
+      <li><a href="../LICENSE">MIT License</a></li>
+    </ul>
+  </div>
+
+  <footer>
+    Built by Kiran Gowda Ramanagara Jayaram for INFO 7375 — Generative AI. MIT License.
+  </footer>
+</body>
+</html>

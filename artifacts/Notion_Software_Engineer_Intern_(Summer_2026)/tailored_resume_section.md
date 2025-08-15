@@ -1,0 +1,10 @@
+- Pursuing M.S. in Software Engineering Systems, expected graduation in Dec 2026, ensuring eligibility for the internship.
+- Previous internship experience at Lipika Technologies, where I developed secure APIs and automated ETL processes, aligning with Notion's focus on delivering reliable software.
+- Proficient in programming languages including Python and Node.js, with hands-on experience in building production systems and deploying applications.
+- Experience in writing clean, tested, and documented code, ensuring maintainability and security in software development.
+- Familiar with relational database systems like SQL and AWS services such as S3 and Lambda, supporting Notion's infrastructure needs.
+- Strong problem-solving skills demonstrated by improving detection accuracy in machine learning models and reducing manual efforts through automation.
+- Collaborative team player, successfully working cross-functionally to deliver impactful projects in fast-paced environments.
+- Empathetic communicator, capable of articulating technical concepts clearly and engaging with diverse perspectives.
+- Passionate about user-centric design and understanding the implications of technology on real-world applications.
+- Eager to learn and adapt to new technologies, aligning with Notion's values of innovation and continuous improvement.

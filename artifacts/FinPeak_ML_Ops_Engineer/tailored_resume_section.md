@@ -1,0 +1,8 @@
+- Developed and maintained ML pipelines using Docker and Kubernetes, ensuring efficient deployment and scalability.
+- Implemented CI/CD processes for ML applications, enhancing deployment frequency and reducing lead time for changes.
+- Utilized Python for building robust data processing and machine learning workflows, optimizing performance and reliability.
+- Leveraged AWS services (S3, Lambda, EMR) for data storage, processing, and model deployment, ensuring high availability and security.
+- Automated ETL processes using Airflow, improving data ingestion efficiency and reducing downtime.
+- Worked with Databricks for collaborative data science and machine learning projects, facilitating faster model development.
+- Designed and executed testing strategies for ML models, ensuring high accuracy and reliability in production environments.
+- Collaborated with cross-functional teams to integrate ML solutions into existing systems, enhancing overall product functionality.

@@ -1,0 +1,8 @@
+- Built backend services using FastAPI, delivering secure APIs for various applications.
+- Developed automated ETL processes with Airflow, enhancing data pipeline efficiency.
+- Utilized Python for developing scalable backend solutions, ensuring high performance.
+- Implemented SQL for database management and data retrieval in production systems.
+- Leveraged AWS services (S3, Lambda) to deploy and manage cloud-based applications.
+- Integrated CI/CD practices to streamline deployment processes and improve code quality.
+- Collaborated in cross-functional teams to design and implement robust backend architectures.
+- Maintained and optimized existing backend services, ensuring reliability and performance.

@@ -1,0 +1,14 @@
+stripe
+figma
+rippling
+ramp
+discord
+affirm
+asana
+robinhood
+scaleai
+databricks
+cockroachlabs
+hubspot
+datadog
+snowflake

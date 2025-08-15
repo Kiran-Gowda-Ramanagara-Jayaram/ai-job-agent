@@ -1,0 +1,8 @@
+- Developed secure APIs and automated ETL processes using Airflow, enhancing data pipeline efficiency.
+- Implemented machine learning models (YOLOv3/ResNet) that improved detection accuracy by ~20%, aligning with modern ML frameworks.
+- Utilized AWS services (S3, Glue, Lambda) for scalable data solutions, demonstrating proficiency in cloud technologies.
+- Designed and deployed CI/CD pipelines, ensuring robust software delivery and minimizing deployment risks.
+- Automated data processing tasks, reducing manual effort and improving operational efficiency by ~40%.
+- Conducted unit and integration testing to enhance code quality and reliability in production environments.
+- Collaborated with cross-functional teams to deliver data-driven insights, supporting organizational goals.
+- Leveraged Spark and SQL for data analysis, optimizing query performance and data retrieval processes.

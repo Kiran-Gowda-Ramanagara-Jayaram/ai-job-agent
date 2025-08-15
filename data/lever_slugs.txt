@@ -1,0 +1,11 @@
+stripe
+databricks
+notion
+roblox
+duolingo
+asana
+zapier
+instacart
+doordash
+reddit
+airtable

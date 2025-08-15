@@ -1,0 +1,37 @@
+target_roles:
+  - "Machine Learning Engineer"
+  - "Data Scientist"
+  - "ML Ops"
+  - "Software Engineer (Backend)"
+
+# Include common Remote-US variants so we catch them
+locations:
+  - "Remote - USA"
+  - "Remote (US)"
+  - "Remote, US"
+  - "Boston, MA"
+  - "Bellevue, WA"
+  - "Seattle, WA"
+  - "San Francisco, CA"
+  - "San Diego, CA"
+  - "San Jose, CA"
+  - "Miami, FL"
+  - "Tampa, FL"
+
+must_have_keywords:
+  - "Python"
+  - "SQL"
+  - "Spark"
+  - "AWS"
+
+nice_to_have_keywords:
+  - "Airflow"
+  - "Snowflake"
+  - "Databricks"
+  - "Docker"
+  - "Kubernetes"
+
+# NEW: ingestion filter knobs
+filters:
+  min_must_keywords: 2  # require at least 2 of the must-have list (not all 4)
+  loosen_role_match: true  # allow synonyms like "ML", "MLOps", "Backend"

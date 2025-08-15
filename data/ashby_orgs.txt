@@ -1,0 +1,10 @@
+openai
+ramp
+scaleai
+notion
+perplexity
+anthropic
+runway
+character
+databricks-labs
+discord

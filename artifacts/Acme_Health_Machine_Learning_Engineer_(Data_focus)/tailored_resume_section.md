@@ -1,0 +1,9 @@
+- Proficient in Python and SQL, leveraging these skills for data manipulation and analysis in production environments.
+- Hands-on experience with Spark for large-scale data processing, optimizing workflows for efficiency.
+- Utilized AWS services (S3, Glue, Lambda, EMR) to build and deploy scalable data solutions.
+- Automated ETL processes using Airflow, enhancing data pipeline reliability and performance.
+- Collaborated with data analysts to productionize machine learning models, ensuring alignment with business objectives.
+- Developed and maintained data architectures in Snowflake and Databricks for efficient querying and storage.
+- Implemented CI/CD practices to streamline deployment processes, ensuring rapid iteration and delivery of data solutions.
+- Engaged in cross-functional teams to integrate machine learning models into existing systems, improving data-driven decision-making.
+- Designed APIs for data access and manipulation, enhancing user experience and system interoperability.

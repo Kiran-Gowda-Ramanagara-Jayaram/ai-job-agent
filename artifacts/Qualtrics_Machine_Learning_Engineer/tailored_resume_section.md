@@ -1,0 +1,8 @@
+- Developed scalable, robust microservices for machine learning models, improving performance and availability in production environments.
+- Implemented and optimized machine learning models using Python and modern frameworks (PyTorch, TensorFlow) to solve complex customer problems.
+- Built and maintained data pipelines using AWS services (S3, Glue, Lambda) to cleanse and index multi-modal data for analysis.
+- Collaborated with cross-functional teams to prioritize features and deliver high-quality solutions in an agile environment.
+- Led design reviews and architectural discussions, ensuring alignment with product goals and technical requirements.
+- Utilized strong fundamentals in algorithm design and complexity analysis to enhance ML model performance.
+- Automated ETL processes with Airflow, enabling efficient data processing and anomaly detection for manufacturing sensors.
+- Engaged in continuous improvement practices, including unit testing and CI/CD implementation, to enhance code quality.
