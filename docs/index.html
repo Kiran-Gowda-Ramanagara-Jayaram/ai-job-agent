@@ -1,123 +1,151 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AI Job Agent — INFO 7375</title>
-  <meta name="description" content="Semi-autonomous job discovery, tailoring, and recruiter-outreach system using LLMs, RAG, RoleFit, and Thompson sampling." />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+ <meta charset="utf-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1" />
+ <title>AI Job Agent — INFO 7375</title>
+ <meta name="description" content="Semi-autonomous job discovery, tailoring, and recruiter outreach using LLMs, RAG, RoleFit, and a Thompson-sampling learner." />
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+ <style>
+   :root{
+     --bg:#0b0f14; --panel:#121822; --muted:#96a2b4; --text:#e8eef7; --accent:#66e3ff; --accent2:#7cffb2;
+     --code:#0f1420; --border:#243245;
+   }
+   *{box-sizing:border-box}
+   html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial,sans-serif}
+   a{color:var(--accent);text-decoration:none}
+   a:hover{opacity:.9}
+   .container{max-width:1100px;margin:0 auto;padding:28px}
+   .hero{padding:72px 0;text-align:center}
+   .title{font-size:40px;font-weight:800;letter-spacing:.2px;margin:0 0 10px}
+   .subtitle{color:var(--muted);font-size:18px;margin:0 auto 24px;max-width:880px}
+   .cta{display:inline-flex;gap:14px;flex-wrap:wrap;justify-content:center}
+   .btn{padding:12px 18px;border-radius:12px;border:1px solid var(--border);background:linear-gradient(180deg,#182232 0%, #121a28 100%);color:var(--text);font-weight:600}
+   .btn.primary{background:linear-gradient(180deg,#00c6ff 0%, #0072ff 100%);border:0;color:#061422}
+   .btn.secondary{background:linear-gradient(180deg,#2b3546 0%, #212a3a 100%)}
+   .grid{display:grid;gap:18px}
+   .grid.cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+   .card{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:18px}
+   .card h3{margin:0 0 8px;font-size:18px}
+   .muted{color:var(--muted)}
+   pre,code{background:var(--code);border:1px solid var(--border);border-radius:12px}
+   pre{padding:16px;overflow:auto}
+   .section{padding:30px 0}
+   .chip{display:inline-block;padding:4px 10px;border-radius:999px;background:#0e1a27;border:1px solid var(--border);color:var(--muted);font-size:12px}
+   footer{padding:40px 0;color:var(--muted);text-align:center;border-top:1px solid var(--border);margin-top:50px}
 
-  <style>
-    :root{
-      --bg:#0b0f14; --panel:#121822; --muted:#96a2b4; --text:#e8eef7; --accent:#66e3ff; --accent2:#7cffb2;
-      --code:#0f1420; --border:#243245;
-    }
-    *{box-sizing:border-box}
-    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial,sans-serif}
-    a{color:var(--accent);text-decoration:none}
-    a:hover{opacity:.9}
-    .container{max-width:1100px;margin:0 auto;padding:28px}
-    .hero{padding:72px 0;text-align:center}
-    .title{font-size:40px;font-weight:800;letter-spacing:.2px;margin:0 0 10px}
-    .subtitle{color:var(--muted);font-size:18px;margin:0 auto 24px;max-width:880px}
-    .cta{display:inline-flex;gap:14px;flex-wrap:wrap;justify-content:center}
-    .btn{padding:12px 18px;border-radius:12px;border:1px solid var(--border);background:linear-gradient(180deg,#182232 0%, #121a28 100%);color:var(--text);font-weight:600}
-    .btn.primary{background:linear-gradient(180deg,#00c6ff 0%, #0072ff 100%);border:0;color:#061422}
-    .btn.secondary{background:linear-gradient(180deg,#2b3546 0%, #212a3a 100%)}
-    .section{padding:30px 0}
-    .card{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:18px}
-    .card h3{margin:0 0 8px;font-size:18px}
-    .muted{color:var(--muted)}
-    .figure{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px}
-    .vstack{display:flex;flex-direction:column;gap:18px}
-    .equation{font-size:18px;line-height:1.6;margin:10px 0}
-    pre,code{background:var(--code);border:1px solid var(--border);border-radius:12px}
-    pre{padding:16px;overflow:auto}
-    .chip{display:inline-block;padding:4px 10px;border-radius:999px;background:#0e1a27;border:1px solid var(--border);color:var(--muted);font-size:12px}
-    footer{padding:40px 0;color:var(--muted);text-align:center;border-top:1px solid var(--border);margin-top:50px}
-    @media (max-width:900px){ .title{font-size:30px} }
-  </style>
+   /* Math: stack vertically, give breathing room, prevent overlap */
+   .math-stack{display:flex;flex-direction:column;gap:18px}
+   .math-card{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:18px}
+   .math-card h3{margin:0 0 10px}
+   .eq{margin:10px 0;font-size:20px;line-height:1.35;overflow-x:auto;white-space:nowrap}
+   /* Allow wrapping for long inline text around equations */
+   .math-card p{margin:6px 0}
+   @media (max-width:900px){
+     .grid.cols-3{grid-template-columns:1fr}
+     .title{font-size:30px}
+     .eq{font-size:18px}
+   }
+ </style>
 
-  <!-- Mermaid (diagram) -->
-  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-  <script>mermaid.initialize({startOnLoad:true, theme:"dark"});</script>
+ <!-- Mermaid (use <div class="mermaid"> to avoid <pre> parsing quirks) -->
+ <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+ <script>mermaid.initialize({startOnLoad:true, theme:"dark"});</script>
 
-  <!-- MathJax (formulas) -->
-  <script>
-    window.MathJax = { tex: {inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$','$$']]} };
-  </script>
-  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+ <!-- MathJax for LaTeX (display + inline) -->
+ <script>
+   window.MathJax = {
+     tex: {
+       inlineMath: [['$', '$'], ['\\(', '\\)']],
+       displayMath: [['$$','$$'], ['\\[','\\]']],
+       processEscapes: true
+     },
+     options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+   };
+ </script>
+ <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 </head>
 <body>
 
-  <div class="container hero">
-    <div class="chip">INFO 7375 • Generative AI • Northeastern University</div>
-    <h1 class="title">AI Job Agent</h1>
-    <p class="subtitle">
-      Semi-autonomous job discovery, artifact generation, recruiter outreach, and online learning.
-      Built by <strong>Kiran Gowda Ramanagara Jayaram</strong>.
-    </p>
-    <div class="cta">
-      <a class="btn primary" href="../README.md">Read the README</a>
-      <a class="btn secondary" href="../app/app.py">View the Streamlit app code</a>
-      <a class="btn" href="#run">Run locally</a>
-      <a class="btn" href="#results">Results</a>
-    </div>
-  </div>
+ <div class="container hero">
+   <div class="chip">INFO 7375 • Generative AI • Northeastern University</div>
+   <h1 class="title">AI Job Agent</h1>
+   <p class="subtitle">
+     Semi-autonomous job discovery, artifact generation, recruiter outreach, and online learning.
+     Built by <strong>Kiran Gowda Ramanagara Jayaram</strong>.
+   </p>
+   <div class="cta">
+     <a class="btn primary" href="../README.md">Read the README</a>
+     <a class="btn secondary" href="../app/app.py">View the Streamlit app code</a>
+     <a class="btn" href="#run">Run locally</a>
+     <a class="btn" href="#results">Results</a>
+   </div>
+ </div>
 
-  <div class="container section">
-    <div class="card">
-      <h3>Highlights</h3>
-      <p class="muted">
-        RAG-grounded artifacts; RoleFit (cosine features + logistic regression); Bandit-driven outreach with Thompson sampling.
-      </p>
-    </div>
-  </div>
+ <div class="container section">
+   <div class="grid cols-3">
+     <div class="card">
+       <h3>RAG-grounded artifacts</h3>
+       <p class="muted">Resume bullets, cover letter, prep pack, and 20 STAR answers conditioned on JD/company snippets.</p>
+     </div>
+     <div class="card">
+       <h3>RoleFit model</h3>
+       <p class="muted">Cosine features + logistic regression estimate <span>$p(y{=}1\\mid x)$</span> to rank jobs by fit.</p>
+     </div>
+     <div class="card">
+       <h3>Bandit-driven outreach</h3>
+       <p class="muted">Thompson sampling over templates per bucket (role|company) learns what works.</p>
+     </div>
+   </div>
+ </div>
 
-  <div class="container section">
-    <h2>Architecture</h2>
-    <div class="figure">
-      <!-- Keep Mermaid text simple: use \n for line breaks, no HTML tags -->
-      <pre class="mermaid">
+ <div class="container section">
+   <h2>Architecture</h2>
+   <div class="card">
+     <div class="mermaid">
 flowchart LR
-  A[Ingest scripts\n(Greenhouse, Lever, Ashby)] --> B[(SQLite jobs.db)]
-  B --> C[RoleFit v2\n(cosine + logistic)]
-  C --> D[Streamlit App\n(Queue & Dashboard)]
-  D --> E[Artifact Generation (LLM)\nResume • Cover • STAR • Prep]
-  D --> F[RAG store\n(SimpleStore)]
-  D --> G[Hunter.io\nDomain & Name finder]
-  D --> H[(CRM: contacts & outreach)]
-  H --> I[Bandit learner\n(Thompson sampling)]
-  I --> D
-      </pre>
-    </div>
-  </div>
+ A["Ingest scripts: Greenhouse/Lever/Ashby"] --> B[("SQLite jobs.db")]
+ B --> C["RoleFit v2 (cosine + logistic)"]
+ C --> D["Streamlit App: Queue & Dashboard"]
+ D --> E["LLM Artifact Gen"]
+ D --> F["RAG SimpleStore"]
+ D --> G["Hunter.io: Domain & Name Finder"]
+ D --> H[("CRM: Contacts & Outreach")]
+ H --> I["Bandit (Thompson Sampling)"]
+ I --> D
+     </div>
+   </div>
+ </div>
 
-  <div class="container section">
-    <h2>Key math</h2>
-    <div class="vstack">
-      <div class="card">
-        <h3>Logistic regression</h3>
-        <div class="equation">$$\Pr(y=1\mid x)=\sigma(w^\top x+b),\qquad \sigma(z)=\frac{1}{1+e^{-z}}.$$</div>
-        <div class="equation">$$\min_{w,b}\ \sum_{i=1}^n\Big[-y_i\log p_i-(1-y_i)\log(1-p_i)\Big]+\lambda\lVert w\rVert_2^2,\ \ p_i=\sigma(w^\top x_i+b).$$</div>
-      </div>
+ <!-- MATH: stacked vertically to avoid overlap -->
+ <div class="container section">
+   <h2>Key math</h2>
+   <div class="math-stack">
 
-      <div class="card">
-        <h3>RAG retrieval</h3>
-        <div class="equation">$$\operatorname*{arg\,topk}_{m}\ \cos\!\big(\phi(q),\,\phi(d_m)\big),$$</div>
-        <p class="muted">where $\phi(\cdot)$ is the embedding function and $\cos$ is cosine similarity.</p>
-      </div>
+     <div class="math-card">
+       <h3>Logistic regression</h3>
+       <div class="eq">$$\Pr(y=1\mid x)=\sigma(w^\top x+b),\qquad \sigma(z)=\frac{1}{1+e^{-z}}$$</div>
+       <div class="eq">$$\min_{w,b}\ \sum_{i=1}^{n}\Big[-y_i\ln p_i-(1-y_i)\ln(1-p_i)\Big]+\lambda\lVert w\rVert_2^2,\quad p_i=\sigma(w^\top x_i+b)$$</div>
+     </div>
 
-      <div class="card">
-        <h3>Bandit posterior</h3>
-        <div class="equation">$$(\alpha,\beta)\leftarrow(\alpha+r,\ \beta+1-r),\qquad \tilde\theta\sim\mathrm{Beta}(\alpha,\beta),\ \ k^\*=\arg\max_k \tilde\theta_k.$$</div>
-      </div>
-    </div>
-  </div>
+     <div class="math-card">
+       <h3>RAG retrieval</h3>
+       <div class="eq">$$\operatorname*{arg\,topk}_{m\in\{1,\ldots,M\}}\ \cos\!\big(\phi(q),\,\phi(d_m)\big)$$</div>
+       <p class="muted">$\phi(\cdot)$ is the embedding function; $\cos$ is cosine similarity.</p>
+     </div>
 
-  <div id="run" class="container section">
-    <h2>Run locally</h2>
+     <div class="math-card">
+       <h3>Bandit posterior (Beta–Bernoulli TS)</h3>
+       <div class="eq">$$\alpha \leftarrow \alpha + r,\qquad \beta \leftarrow \beta + 1 - r$$</div>
+       <div class="eq">$$\tilde{\theta}\sim \mathrm{Beta}(\alpha,\beta),\qquad k^\*=\arg\max_k \tilde{\theta}_k$$</div>
+     </div>
+
+   </div>
+ </div>
+
+ <div id="run" class="container section">
+   <h2>Run locally</h2>
 <pre><code># 1) Setup
 python -m venv .venv
 source .venv/bin/activate
@@ -137,31 +165,40 @@ python -m scripts.seed_synthetic && python -m scripts.train_fit_model
 # 5) Launch
 streamlit run app/app.py
 </code></pre>
-  </div>
+ </div>
 
-  <div id="results" class="container section">
-    <h2>Results snapshot</h2>
-    <div class="vstack">
-      <div class="card"><h3>Fit model</h3><p class="muted">5-fold ROC-AUC/PR-AUC; calibrated probabilities used for ranking.</p></div>
-      <div class="card"><h3>Learning loop</h3><p class="muted">Template frequencies and moving-average rewards converge by bucket.</p></div>
-      <div class="card"><h3>UX</h3><p class="muted">Queue drives artifact generation & outreach; Dashboard aggregates outcomes and exports CSVs.</p></div>
-    </div>
-  </div>
+ <div id="results" class="container section">
+   <h2>Results snapshot</h2>
+   <div class="grid cols-3">
+     <div class="card">
+       <h3>Fit model</h3>
+       <p class="muted">5-fold ROC-AUC/PR-AUC reported in the technical report. Calibrated probabilities used for ranking.</p>
+     </div>
+     <div class="card">
+       <h3>Learning loop</h3>
+       <p class="muted">Template selection frequencies and moving-average rewards show convergence by bucket.</p>
+     </div>
+     <div class="card">
+       <h3>UX</h3>
+       <p class="muted">Queue drives artifact generation and outreach; Dashboard aggregates outcomes and exports CSVs.</p>
+     </div>
+   </div>
+ </div>
 
-  <div class="container section">
-    <h2>Links</h2>
-    <ul>
-      <li><a href="../README.md">Repository README</a></li>
-      <li><a href="../app/app.py">Streamlit app</a></li>
-      <li><a href="../agents/outreach_agent.py">Outreach Agent (bandit)</a></li>
-      <li><a href="../agents/composer.py">Artifact Composer</a></li>
-      <li><a href="../scripts/train_fit_model.py">Training script</a></li>
-      <li><a href="../LICENSE">MIT License</a></li>
-    </ul>
-  </div>
+ <div class="container section">
+   <h2>Links</h2>
+   <ul>
+     <li><a href="../README.md">Repository README</a></li>
+     <li><a href="../app/app.py">Streamlit app</a></li>
+     <li><a href="../agents/outreach_agent.py">Outreach Agent (bandit)</a></li>
+     <li><a href="../agents/composer.py">Artifact Composer</a></li>
+     <li><a href="../scripts/train_fit_model.py">Training script</a></li>
+     <li><a href="../LICENSE">MIT License</a></li>
+   </ul>
+ </div>
 
-  <footer>
-    Built by Kiran Gowda Ramanagara Jayaram for INFO 7375 — Generative AI. MIT License.
-  </footer>
+ <footer>
+   Built by Kiran Gowda Ramanagara Jayaram for INFO 7375 — Generative AI. MIT License.
+ </footer>
 </body>
 </html>
